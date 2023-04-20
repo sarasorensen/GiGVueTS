@@ -38,7 +38,7 @@
         aria-hidden="false"
         tabindex="0"
       >
-        <form id="contact">
+    
           <h2>Modify contact(s)</h2>
 
           <ul class="nav-list">
@@ -57,75 +57,16 @@
               :title="'- Delete contact'"
               :columns="['Name', 'Last name', 'E-mail', 'Country', 'Delete']"
               :data="['Sara', '12345', 'mail@mail.com', 'Spain', 'X']"
-              :rowClick="() => openPopUp('delete')"
+              :rowClick="() => openPopUp('delete', 1)"
             />
+
+  
             <pop-up
               @closePopUp="closePopUp()"
-              v-if="isOpen.value == true"
               :fields="['test']"
             />
 
-            <table>
-              <tr>
-                <th>Name</th>
-                <th>Last name</th>
-                <th>E-mail</th>
-                <th>Country</th>
-                <th>Delete</th>
-              </tr>
-              <tr>
-                <td>Sara 1</td>
-                <td>9122334455</td>
-                <td>lala@hotmail.com</td>
-                <td>4316, Germany</td>
-                <td @click="openPopUp(1)"><i class="fa fa-trash-o"></i></td>
-              </tr>
-              <tr>
-                <td>Sara 2</td>
-                <td>9122334455</td>
-                <td>lala@hotmail.com</td>
-                <td>4318, Mexico</td>
 
-                <td @click="openPopUp(2)"><i class="fa fa-trash-o"></i></td>
-              </tr>
-
-              <section class="popup" id="popUp" @click="closePopUp()">
-                <div class="popup__content" @click.stop>
-                  <i
-                    @click="closePopUp()"
-                    class="fa fa-close popup__content--close"
-                  ></i>
-
-                  <div id="verify">
-                    <h2>Are you sure?</h2>
-                    <p>
-                      Do you really want to delete /contact name/ ? This cannot
-                      be undone.
-                    </p>
-                  </div>
-
-                  <div id="verified">
-                    <h2>Contact deleted <i class="fa fa-check"></i></h2>
-                    <div class="wrap__buttons">
-                      <button class="btn" @click="closePopUp()">Close</button>
-                    </div>
-                  </div>
-
-                  <div class="loader" id="loader"></div>
-
-                  <div class="wrap__buttons">
-                    <button class="btn btn__neutral">
-                      <i class="fa fa-close"></i> Cancel
-                    </button>
-
-                    <button class="btn" @click="deleteContact()">
-                      <i class="fa fa-trash-o"></i> Delete
-                    </button>
-                  </div>
-                  <hr />
-                </div>
-              </section>
-            </table>
           </section>
           <section id="toggle3">
             <h3><i class="fa fa-gear"></i> Edit contact</h3>
@@ -227,7 +168,7 @@
               </section>
             </table>
           </section>
-        </form>
+   
       </div>
     </div>
   </main>
@@ -235,7 +176,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
 import * as PopUpTs from "./scripts/PopUp";
 import * as Contact from "./scripts/EditContact";
 
@@ -249,18 +189,10 @@ export default defineComponent({
     PopUp,
     TableItem,
   },
-  data() {
-    return {
-      isOpen: {
-        value: false,
-        indx: 0,
-      },
-    };
-  },
   methods: {
-    openPopUp(source:any) {
-      console.log(source)
-      PopUpTs.openPopUp();
+   async openPopUp(source:any, i:any) {
+      console.log(source, i)
+     await PopUpTs.openPopUp();
     },
     closePopUp() {
       PopUpTs.closePopUp();

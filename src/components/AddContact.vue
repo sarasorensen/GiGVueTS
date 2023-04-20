@@ -1,5 +1,5 @@
 <template>
-  <section id="toggle1">
+  <form id="toggle1">
     <h3>+ Add contact</h3>
     <div class="input-group">
       <input type="text" required="true" name="firstName" id="firstName" />
@@ -26,7 +26,7 @@
       </button>
       <input type="submit" value="+ Add contact" class="btn" />
     </div>
-  </section>
+  </form>
 </template>
 
 <script lang="ts">

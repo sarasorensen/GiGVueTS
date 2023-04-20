@@ -31,7 +31,7 @@ export default defineComponent({
     rowClick: {
       type: Function,
       required: false,
-      default: '-'
+      default: () => 0,
     },
   },
 });

@@ -13,4 +13,5 @@ export function closePopUp() {
 export function openEdit() {
   const window = document.getElementById("popUpEdit");
   window!.style.display = "block";
+  console.log(3)
 }
