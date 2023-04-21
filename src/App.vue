@@ -8,7 +8,7 @@
           @click="tab"
           role="tab"
           aria-controls="panel1"
-          aria-selected="false"
+          aria-selected="true"
           tabindex="1"
         >
           All contacts
@@ -17,7 +17,7 @@
         <li
           role="tab"
           aria-controls="panel2"
-          aria-selected="true"
+          aria-selected="false"
           tabindex="0"
           @click="tab"
         >
@@ -42,55 +42,62 @@
         id="panel2"
         class="panel"
         role="tabpanel"
-        aria-hidden="false"
+        aria-hidden="true"
         tabindex="0"
       >
-        <h2>Modify contact(s)</h2>
-
         <ul class="nav-list" id="navList">
-          <li @click="showSection(1)">+ Add contact</li>
+          <li @click="showSection(1, 'null')">+ Add contact</li>
 
-          <li @click="showSection(2)">
+          <li @click="showSection(2, 'delete')">
             <i class="fa fa-trash-o"></i> Delete contact
           </li>
 
-          <li @click="showSection(3)">
+          <li @click="showSection(3, 'edit')">
             <i class="fa fa-gear"></i> Edit contact
           </li>
         </ul>
 
-        <contact-form id="toggle1" :title="'+ Add Contact'" :action="'add'" />
+        <contact-form id="toggle1" :title="'Add Contact'" :action="'add'" />
 
         <section id="toggle2">
           <table-item
-            :title="'- Delete contact'"
-            :columns="['Name', 'Last name', 'E-mail', 'Country', 'Delete']"
-            :data="['Sara', '12345', 'mail@mail.com', 'Spain', 'X']"
-            :rowClick="() => openPopUp('delete', 1)"
+            :title="'Delete contact'"
+            :info="'Click to delete the desired contact.'"
+            :columns="['Name', 'Last name', 'E-mail', 'Country']"
+            :data="['Sara', '12345', 'mail@mail.com', 'Spain']"
+            :rowClick="() => openPopUp('delete')"
           />
 
-          <pop-up
+
+            <pop-up
             @actionPopUp="deleteContact()"
-            @closePopUp="closePopUp()"
+            @closePopUp="closePopUp('delete')"
             :title="'Delete'"
             :action="'delete'"
             :btn="'Delete'"
           />
+
+
+    
         </section>
         <section id="toggle3">
           <table-item
             :title="'Edit contact'"
-            :columns="['Name', 'Last name', 'E-mail', 'Country', 'Edit']"
-            :data="['Sara', '12345', 'mail@mail.com', 'Spain', 'X']"
+            :info="'Click to edit the desired contact.'"
+            :columns="['Name', 'Last name', 'E-mail', 'Country']"
+            :data="['Sara', '12345', 'mail@mail.com', 'Spain']"
+            :rowClick="() => openPopUp('edit')"
           />
-
-          <pop-up
+    
+            <pop-up
             @actionPopUp="edit()"
-            @closePopUp="closePopUp()"
+            @closePopUp="closePopUp('edit')"
             :title="'Edit'"
             :action="'edit'"
             :btn="'Save'"
           />
+
+     
         </section>
       </div>
     </div>
@@ -113,18 +120,19 @@ export default defineComponent({
     PopUp,
     TableItem,
   },
+
   methods: {
     tab() {
       Panel.tab("panel");
     },
-    showSection(source: any) {
-      Panel.showSection(source);
+    showSection(i:any, source: any) {
+      Panel.showSection(i, source);
     },
-    openPopUp(source: any, i: any) {
-      PopUpTs.openPopUp();
+    openPopUp(source: any) {
+      PopUpTs.openPopUp(source);
     },
-    closePopUp() {
-      PopUpTs.closePopUp();
+    closePopUp(source:any) {
+      PopUpTs.closePopUp(source);
     },
     deleteContact() {
       Contact.deleteContact();
@@ -135,7 +143,7 @@ export default defineComponent({
   },
   mounted() {
     this.tab();
-    this.showSection(1);
+    this.showSection(1, 'null');
   },
 });
 </script>

@@ -1,18 +1,21 @@
-export function openPopUp() {
-  const window = document.getElementById("popUp");
+export function openPopUp(source: any) {
+  const window = document.getElementById(source);
+  window!.setAttribute("key", source);
   window!.style.display = "block";
 }
 
-export function closePopUp() {
-  const window = document.getElementById("popUp");
-  const edit = document.getElementById("popUpEdit");
-  const verify = document.getElementById("verify");
-  const verified = document.getElementById("verified");
-  const btns = document.getElementById("btns-action");
+export function closePopUp(source: any) {
+  if (source !== "null") {
+    const window = document.getElementById(source);
+    const verify = document.getElementById("verify");
+    const verified = document.getElementById("verified");
+    const btns = document.getElementById("btns-action");
 
-  window!.style.display = "none";
-  edit!.style.display = "none";
-  verify!.style.display = "block";
-  btns!.style.display = "block";
-  verified!.style.display = 'none'
+    verify!.style.display = "block";
+    btns!.style.display = "block";
+    window!.style.display = "none";
+    verified!.style.display = "none";
+    window!.style.display = "none";
+    window!.style.display = "none";
+  }
 }

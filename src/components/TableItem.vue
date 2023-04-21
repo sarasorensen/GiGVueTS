@@ -1,6 +1,8 @@
 <template>
-  <table>
+  <section>
     <h3>{{ title }}</h3>
+    <p class="desc">{{ info }}</p>
+    <table>
     <tr>
       <th v-for="(col, i) in columns" :key="i">{{ col }}</th>
     </tr>
@@ -10,6 +12,9 @@
     </tr>
 
   </table>
+  </section>
+
+
 </template>
 
 <script lang="ts">
@@ -18,6 +23,9 @@ import { defineComponent } from "vue";
 export default defineComponent({
   props: {
     title: {
+      type: String,
+    }, 
+    info: {
       type: String,
     },
     columns: {

@@ -20,12 +20,13 @@
       </select>
       <label for="country">Country</label>
     </div>
-    <div class="wrap__buttons" v-if="action == 'add'">
-      <button class="btn btn__neutral" @click="clearForm()">
-        <i class="fa fa-close"></i> Cancel
-      </button>
-      <input type="submit" value="+ Add contact" class="btn" />
-    </div>
+    <btn-row
+      v-if="action == 'add'"
+      :btn1="'Cancel'"
+      :btn1Click="() => clearForm()"
+      :btn2="'+ Add Contact'"
+      :btn2Click="() => clearForm()"
+    />
   </form>
 </template>
 
@@ -33,17 +34,21 @@
 import * as Contact from "../scripts/EditContact";
 import { defineComponent } from "vue";
 
+import btnRow from "./BtnRow.vue";
 export default defineComponent({
   name: "ContactForm",
-  props:{
-    title:{
-      type:String,
-      required: true
+  components: {
+    btnRow,
+  },
+  props: {
+    title: {
+      type: String,
+      required: true,
     },
-      action:{
-      type:String,
-      required: true
-    }
+    action: {
+      type: String,
+      required: true,
+    },
   },
   methods: {
     clearForm() {
