@@ -5,13 +5,14 @@ export function openPopUp() {
 
 export function closePopUp() {
   const window = document.getElementById("popUp");
-  window!.style.display = "none";
   const edit = document.getElementById("popUpEdit");
-  edit!.style.display = "none";
-}
+  const verify = document.getElementById("verify");
+  const verified = document.getElementById("verified");
+  const btns = document.getElementById("btns-action");
 
-export function openEdit() {
-  const window = document.getElementById("popUpEdit");
-  window!.style.display = "block";
-  console.log(3)
+  window!.style.display = "none";
+  edit!.style.display = "none";
+  verify!.style.display = "block";
+  btns!.style.display = "block";
+  verified!.style.display = 'none'
 }
