@@ -1,9 +1,10 @@
 <template>
   <div class="wrap__buttons">
-    <button class="btn btn__neutral" @click="btn1Click('abc')">
+    <button class="btn btn__neutral" @click.prevent="btn1Click('abc')" v-if="btn1 !== 'null'">
       <i class="fa fa-close"></i> {{ btn1 }}
     </button>
-    <button class="btn" @click="btn2Click('abc')"><i class="fa fa-arrow"></i> {{ btn2 }}</button>
+
+    <button class="btn" :disabled="disabled" @click.prevent="btn2Click('abc')">{{ btn2 }}</button>
   </div>
 </template>
 
@@ -15,6 +16,10 @@ export default {
     },
     btn2: {
       type: String,
+    },
+    disabled: {
+type: Boolean,
+default: false
     },
     btn1Click:{
         type: Function,

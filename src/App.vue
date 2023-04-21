@@ -35,7 +35,7 @@
         <table-item
           :title="'All contacts'"
           :columns="['Name', 'Last name', 'E-mail', 'Country']"
-          :data="['Sara', '12345', 'mail@mail.com', 'Spain']"
+          :data="contacts"
         />
       </div>
       <div
@@ -64,40 +64,34 @@
             :title="'Delete contact'"
             :info="'Click to delete the desired contact.'"
             :columns="['Name', 'Last name', 'E-mail', 'Country']"
-            :data="['Sara', '12345', 'mail@mail.com', 'Spain']"
+          :data="contacts"
             :rowClick="() => openPopUp('delete')"
           />
 
-
-            <pop-up
+          <pop-up
             @actionPopUp="deleteContact()"
             @closePopUp="closePopUp('delete')"
             :title="'Delete'"
             :action="'delete'"
             :btn="'Delete'"
           />
-
-
-    
         </section>
         <section id="toggle3">
           <table-item
             :title="'Edit contact'"
             :info="'Click to edit the desired contact.'"
             :columns="['Name', 'Last name', 'E-mail', 'Country']"
-            :data="['Sara', '12345', 'mail@mail.com', 'Spain']"
+          :data="contacts"
             :rowClick="() => openPopUp('edit')"
           />
-    
-            <pop-up
+
+          <pop-up
             @actionPopUp="edit()"
             @closePopUp="closePopUp('edit')"
             :title="'Edit'"
             :action="'edit'"
             :btn="'Save'"
           />
-
-     
         </section>
       </div>
     </div>
@@ -105,6 +99,7 @@
 </template>
 
 <script lang="ts">
+import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import * as Panel from "./scripts/panel";
 import * as PopUpTs from "./scripts/PopUp";
@@ -120,18 +115,20 @@ export default defineComponent({
     PopUp,
     TableItem,
   },
-
+  computed: {
+    ...mapState(["contacts"]),
+  },
   methods: {
     tab() {
       Panel.tab("panel");
     },
-    showSection(i:any, source: any) {
+    showSection(i: any, source: any) {
       Panel.showSection(i, source);
     },
     openPopUp(source: any) {
       PopUpTs.openPopUp(source);
     },
-    closePopUp(source:any) {
+    closePopUp(source: any) {
       PopUpTs.closePopUp(source);
     },
     deleteContact() {
@@ -143,7 +140,7 @@ export default defineComponent({
   },
   mounted() {
     this.tab();
-    this.showSection(1, 'null');
+    this.showSection(1, "null");
   },
 });
 </script>

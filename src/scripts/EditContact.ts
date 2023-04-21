@@ -24,3 +24,13 @@ export function clearForm(){
 export function edit(){
   console.log('edit')
 }
+
+export function validateEmail(mail:any){
+  const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+  const result: boolean = expression.test(mail);
+
+  return result 
+}
+export function addContact(contact:any){
+  
+}
