@@ -1,28 +1,34 @@
-export function deleteContact() {
+import store from '@/store';
 
+var deleteMe = ""
+export function toBeDeleted(contact:any){
+ return deleteMe = contact;
+}
+
+var editMe = ""
+export function toBeEdited(contact:any){
+ return editMe = contact;
+}
+
+export function deleteContact() {
   const loader = document.getElementById("loader");
   const verify = document.getElementById("verify");
   const verified = document.getElementById("verified");
   const btns = document.getElementById("btns-action")
   verify!.style.display = "none";
 
-  let inProgress = true;
+  store.dispatch('deleteContact', deleteMe)
+
+if(store.state.deleteInPrgs == true){
   loader!.style.display = "block";
-
-  setTimeout(() => {
-    inProgress = false;
-    btns!.style.display = "none";
-    loader!.style.display = "none";
-    verified!.style.display = 'block'
-  }, 1500);
-
-}
-export function clearForm(){
-    console.log('clearForm')
 }
 
-export function edit(){
-  console.log('edit')
+if(store.state.deleteInPrgs == false){
+  btns!.style.display = "none";
+  loader!.style.display = "none";
+  verified!.style.display = 'block'
+}
+
 }
 
 export function validateEmail(mail:any){
@@ -30,7 +36,4 @@ export function validateEmail(mail:any){
   const result: boolean = expression.test(mail);
 
   return result 
-}
-export function addContact(contact:any){
-  
 }

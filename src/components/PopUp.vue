@@ -1,19 +1,28 @@
 <template>
   <section class="popup" :id="action" @click="closePopUp">
+    <i
+      @click="closePopUp(action)"
+      class="fa fa-close popup__content--close"
+    ></i>
     <div class="popup__content" @click.stop>
-      <i @click="closePopUp(action)" class="fa fa-close popup__content--close"></i>
       <div id="verify">
-        <h2>{{title}} / contact name</h2>
+        <h2>{{ title }} {{ name }}</h2>
 
-        <p v-if="action == 'delete'">
-          Do you really want to delete /contact name/ ? This cannot be undone.
+        <p v-if="action == 'delete'" class="desc">
+          Do you really want to delete {{ name }}? This cannot be undone.
         </p>
 
-        <contact-form v-if="action == 'edit'" :title="'Edit Contact'" :action="'edit'"/>
+        <contact-form
+          v-if="action == 'edit'"
+          :title="'Edit Contact'"
+          :action="'edit'"
+          :formInput="formInput"
+          @closePopUp="closePopUp(action)"
+        />
       </div>
 
       <div id="verified">
-        <h2>Success <i class="fa fa-check"></i></h2>
+        <h2>Success</h2>
         <div class="wrap__buttons">
           <button class="btn" @click="closePopUp(action)">Close</button>
         </div>
@@ -21,21 +30,21 @@
 
       <div class="loader" id="loader"></div>
 
-
       <btn-row
-      id="btns-action"
-      :btn1="'Cancel'"
-      :btn1Click="() => closePopUp(action)"
-      :btn2="btn"
-      :btn2Click="() => actionPopUp()"
-    />
+      v-if="action !== 'edit'"
+        id="btns-action"
+        :btn1="'Cancel'"
+        :btn1Click="() => closePopUp(action)"
+        :btn2="btn"
+        :btn2Click="() => actionPopUp()"
+      />
 
       <hr />
     </div>
   </section>
 </template>
-  
-  <script lang="ts">
+
+<script lang="ts">
 import { defineComponent } from "vue";
 
 //components
@@ -43,29 +52,35 @@ import btnRow from "./BtnRow.vue";
 import ContactForm from "./ContactForm.vue";
 export default defineComponent({
   name: "PopUp",
-  components:{
+  components: {
     btnRow,
-    ContactForm
+    ContactForm,
   },
   props: {
-    title:{
+    title: {
       type: String,
       required: true,
-      default: ""
+      default: "",
     },
-    action:{
+    name: {
+      type: String,
+    },
+    action: {
       type: String,
       required: true,
-      default: ""
+      default: "",
     },
-    btn:{
+    btn: {
       type: String,
       required: true,
-      default: ""
+      default: "",
     },
+    formInput: {
+      type: Object,
+    }
   },
   methods: {
-    closePopUp(source:any) {
+    closePopUp(source: any) {
       this.$emit("closePopUp", source);
     },
     actionPopUp() {

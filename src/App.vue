@@ -3,7 +3,7 @@
     <h1>Address Book</h1>
 
     <div id="panel">
-      <ul class="nav-list">
+      <ul class="nav">
         <li
           @click="tab"
           role="tab"
@@ -32,10 +32,12 @@
         aria-hidden="false"
         tabindex="0"
       >
+      <div class="space"></div>
         <table-item
           :title="'All contacts'"
           :columns="['Name', 'Last name', 'E-mail', 'Country']"
           :data="contacts"
+          :hover="false"
         />
       </div>
       <div
@@ -45,7 +47,7 @@
         aria-hidden="true"
         tabindex="0"
       >
-        <ul class="nav-list" id="navList">
+        <ul class="nav" id="navList">
           <li @click="showSection(1, 'null')">+ Add contact</li>
 
           <li @click="showSection(2, 'delete')">
@@ -64,14 +66,17 @@
             :title="'Delete contact'"
             :info="'Click to delete the desired contact.'"
             :columns="['Name', 'Last name', 'E-mail', 'Country']"
-          :data="contacts"
+            :data="contacts"
             :rowClick="() => openPopUp('delete')"
+            @action="toBeDeleted"
+            :hover="true"
           />
 
           <pop-up
-            @actionPopUp="deleteContact()"
+            @actionPopUp="confirmDelete()"
             @closePopUp="closePopUp('delete')"
             :title="'Delete'"
+            :name="modifyTitle"
             :action="'delete'"
             :btn="'Delete'"
           />
@@ -81,16 +86,20 @@
             :title="'Edit contact'"
             :info="'Click to edit the desired contact.'"
             :columns="['Name', 'Last name', 'E-mail', 'Country']"
-          :data="contacts"
+            :data="contacts"
             :rowClick="() => openPopUp('edit')"
+            @action="toBeEdited"
+            :hover="true"
           />
 
           <pop-up
-            @actionPopUp="edit()"
+
             @closePopUp="closePopUp('edit')"
             :title="'Edit'"
+            :name="modifyTitle"
             :action="'edit'"
             :btn="'Save'"
+            :formInput="editContact"
           />
         </section>
       </div>
@@ -115,6 +124,12 @@ export default defineComponent({
     PopUp,
     TableItem,
   },
+  data() {
+    return {
+      modifyTitle: "",
+      editContact: {}
+    };
+  },
   computed: {
     ...mapState(["contacts"]),
   },
@@ -125,22 +140,28 @@ export default defineComponent({
     showSection(i: any, source: any) {
       Panel.showSection(i, source);
     },
+    toBeDeleted(value: any) {
+      let contact = Contact.toBeDeleted(value);
+      this.modifyTitle = contact.name;
+    },
+    toBeEdited(value: any) {
+      let contact = Contact.toBeEdited(value);
+      this.modifyTitle = contact.name;
+      this.editContact = contact;
+    },
     openPopUp(source: any) {
       PopUpTs.openPopUp(source);
     },
     closePopUp(source: any) {
       PopUpTs.closePopUp(source);
     },
-    deleteContact() {
+    confirmDelete() {
       Contact.deleteContact();
     },
-    edit() {
-      Contact.edit();
-    },
   },
-  mounted() {
-    this.tab();
-    this.showSection(1, "null");
+  async mounted() {
+  await  this.tab();
+  await  this.showSection(1, "null");
   },
 });
 </script>

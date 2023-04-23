@@ -64,9 +64,10 @@
     </p>
 
     <btn-row
-      v-if="action == 'add' && !addingInPrgs && !addSuccess"
-      :btn1="'null'"
-      :btn2="'+ Add Contact'"
+      v-if="!addingInPrgs && !addSuccess"
+      :btn1="'Reset'"
+      :btn2="btn2"
+      :btn1Click="() => resetForm()"
       :btn2Click="() => validateForm()"
       :disabled="nameWatcher || lastNameWatcher || emailWatcher"
     />
@@ -75,11 +76,15 @@
     <p class="success" v-if="addSuccess">
       New contact is added <i class="fa fa-check"></i>
     </p>
+    <p class="success" v-if="editSuccess">
+      Contact is updated <i class="fa fa-check"></i>
+    </p>
   </form>
 </template>
 
 <script lang="ts">
-import { mapActions, mapState } from 'vuex'
+import store from '../store/index';
+import { mapActions, mapState } from "vuex";
 import * as Contact from "../scripts/EditContact";
 import { defineComponent } from "vue";
 const countryList = require("country-list");
@@ -90,21 +95,6 @@ export default defineComponent({
   components: {
     btnRow,
   },
-  data() {
-    return {
-      countries: [],
-      formData: {
-        name: "",
-        lastName: "",
-        email: "",
-        country: "andorra",
-      },
-      nameWatcher: false,
-      lastNameWatcher: false,
-      validEmail: true,
-      emailWatcher: false,
-    };
-  },
   props: {
     title: {
       type: String,
@@ -114,14 +104,33 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    formInput: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      countries: [],
+      formData: {
+        name: "",
+        lastName: "",
+        email: "",
+        country: "andorra",
+        id: String.fromCharCode(65 + Math.floor(Math.random() * 26)),
+      },
+      nameWatcher: false,
+      lastNameWatcher: false,
+      validEmail: true,
+      emailWatcher: false,
+      reset: false,
+      btn2: '+ Add contact'
+    };
   },
   computed: {
-    ...mapState(["addingInPrgs", "addSuccess"]),
+    ...mapState(["addingInPrgs", "addSuccess", "editSuccess"]),
   },
   methods: {
-    ...mapActions([
-      'addContact'
-    ]),
+    ...mapActions(["addContact", "editContact"]),
     validateForm() {
       if (this.formData.name == "") {
         this.nameWatcher = true;
@@ -144,36 +153,86 @@ export default defineComponent({
         this.lastNameWatcher == false &&
         this.nameWatcher == false
       ) {
-        this.addContact(this.formData)
+        if(this.action == 'add'){
+          this.addContact(this.formData);
+        }else {
+          this.editContact(this.formData)
+        }
+   
       }
     },
+    resetForm(){
+      this.reset = true;
+      this.formData = {
+          name: "",
+          lastName: "",
+          email: "",
+          country: "andorra",
+          id: ""
+        };
+    }
   },
   mounted() {
     this.countries = countryList.getNameList();
+
+    if(this.action !== 'add'){
+      this.btn2 = 'Save'
+    }
   },
   watch: {
+    formInput(){
+      if(this.formInput !== undefined){
+      this.formData = {
+          name: this.formInput.name,
+          lastName: this.formInput.lastName,
+          email: this.formInput.email,
+          country: this.formInput.country,
+          id: this.formInput.id,
+        };
+    }
+    },
     "formData.name"() {
-      if (this.formData.name == "") {
+      if (this.formData.name == "" && this.reset !== true) {
         this.nameWatcher = true;
       } else {
         this.nameWatcher = false;
       }
     },
     "formData.lastName"() {
-      if (this.formData.lastName == "") {
+      if (this.formData.lastName == "" && this.reset !== true) {
         this.lastNameWatcher = true;
       } else {
         this.lastNameWatcher = false;
       }
     },
     "formData.email"() {
-      if (this.formData.email == "") {
+      if (this.formData.email == "" && this.reset !== true) {
         this.emailWatcher = true;
       } else {
         this.emailWatcher = false;
         this.validEmail = Contact.validateEmail(this.formData.email);
       }
     },
+    addSuccess() {
+      setTimeout(() => {
+       store.state.addSuccess = false;
+       this.reset = true;
+        this.formData = {
+          name: "",
+          lastName: "",
+          email: "",
+          country: "andorra",
+          id: ""
+        };
+      }, 1500);
+    },
+    editSuccess(){
+      setTimeout(() => {
+       store.state.addSuccess = false;
+       this.reset = true;
+    this.$emit('closePopUp', true)
+      }, 1500);
+    }
   },
 });
 </script>

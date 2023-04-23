@@ -3,15 +3,18 @@
     <h3>{{ title }}</h3>
     <p class="desc">{{ info }}</p>
     <table>
-
       <tr>
         <th v-for="(col, i) in columns" :key="i">{{ col }}</th>
       </tr>
 
-      <tr @click="rowClick('abc')" v-for="(object, k) in data" :key="k">
-        <td v-for="(value, k) in object" :key="k">{{ value}}</td>
+      <tr
+        @click="rowClick('abc'), action(object)"
+        v-for="(object, k) in data"
+        :key="k"
+        :class="{ disableHover: !hover }"
+      >
+        <td v-for="(value, k) in object" :key="k" v-show="k !== 'id'">{{ value }}</td>
       </tr>
-
     </table>
   </section>
 </template>
@@ -36,10 +39,16 @@ export default defineComponent({
     rowClick: {
       type: Function,
       required: false,
-      default: () => 0,
+      default: (source: string) => source,
+    },
+    hover: {
+      type: Boolean,
     },
   },
   methods: {
+    action(obj: any) {
+      this.$emit("action", obj);
+    },
     getFields(contact: any) {
       let fields = [
         {
