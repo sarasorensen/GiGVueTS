@@ -1,13 +1,13 @@
 <template>
   <form>
-    <h3>{{ title }}</h3>
+    <h2>{{ title }}</h2>
     <div class="input-group">
       <p class="warning warning__input" v-if="nameWatcher">Name is required.</p>
       <input
         type="text"
         required="true"
         name="firstName"
-        id="firstName"
+        id="name"
         v-model="formData.name"
       />
       <label for="firstName"> First name </label>
@@ -20,7 +20,7 @@
         type="text"
         required="true"
         name="lastName"
-        id="lastName"
+        id="lastname"
         v-model="formData.lastName"
       />
       <label for="lastName"> Last name </label>
@@ -41,7 +41,7 @@
         type="text"
         required="true"
         name="email"
-        id="email"
+        id="mail"
         v-model="formData.email"
       />
       <label for="email"> E-mail </label>
@@ -50,7 +50,7 @@
     <div class="input-group">
       <select
         name="country"
-        id="country"
+        id="cont"
         required="true"
         v-model="formData.country"
       >
@@ -64,7 +64,7 @@
     </p>
 
     <btn-row
-      v-if="!addingInPrgs && !addSuccess"
+      v-if="!addingInPrgs && !addSuccess && !editSuccess"
       :btn1="'Reset'"
       :btn2="btn2"
       :btn1Click="() => resetForm()"
@@ -83,11 +83,12 @@
 </template>
 
 <script lang="ts">
-import store from '../store/index';
+import store from "../store/index";
 import { mapActions, mapState } from "vuex";
 import * as Contact from "../scripts/EditContact";
 import { defineComponent } from "vue";
 const countryList = require("country-list");
+
 //components
 import btnRow from "./BtnRow.vue";
 export default defineComponent({
@@ -105,8 +106,8 @@ export default defineComponent({
       required: true,
     },
     formInput: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -123,7 +124,7 @@ export default defineComponent({
       validEmail: true,
       emailWatcher: false,
       reset: false,
-      btn2: '+ Add contact'
+      btn2: "+ Add contact",
     };
   },
   computed: {
@@ -153,43 +154,42 @@ export default defineComponent({
         this.lastNameWatcher == false &&
         this.nameWatcher == false
       ) {
-        if(this.action == 'add'){
+        if (this.action == "add") {
           this.addContact(this.formData);
-        }else {
-          this.editContact(this.formData)
+        } else {
+          this.editContact(this.formData);
         }
-   
       }
     },
-    resetForm(){
+    resetForm() {
       this.reset = true;
       this.formData = {
-          name: "",
-          lastName: "",
-          email: "",
-          country: "andorra",
-          id: ""
-        };
-    }
+        name: "",
+        lastName: "",
+        email: "",
+        country: "andorra",
+        id: "",
+      };
+    },
   },
-  mounted() {
-    this.countries = countryList.getNameList();
+  async mounted() {
+    this.countries = await countryList.getNameList();
 
-    if(this.action !== 'add'){
-      this.btn2 = 'Save'
+    if (this.action !== "add") {
+      this.btn2 = "Save";
     }
   },
   watch: {
-    formInput(){
-      if(this.formInput !== undefined){
-      this.formData = {
+    formInput() {
+      if (this.formInput !== undefined) {
+        this.formData = {
           name: this.formInput.name,
           lastName: this.formInput.lastName,
           email: this.formInput.email,
           country: this.formInput.country,
           id: this.formInput.id,
         };
-    }
+      }
     },
     "formData.name"() {
       if (this.formData.name == "" && this.reset !== true) {
@@ -215,24 +215,24 @@ export default defineComponent({
     },
     addSuccess() {
       setTimeout(() => {
-       store.state.addSuccess = false;
-       this.reset = true;
+        store.state.addSuccess = false;
+        this.reset = true;
         this.formData = {
           name: "",
           lastName: "",
           email: "",
           country: "andorra",
-          id: ""
+          id: "",
         };
       }, 1500);
     },
-    editSuccess(){
+    editSuccess() {
       setTimeout(() => {
-       store.state.addSuccess = false;
-       this.reset = true;
-    this.$emit('closePopUp', true)
+        store.state.editSuccess = false;
+        this.reset = true;
+        this.$emit("closePopUp", true);
       }, 1500);
-    }
+    },
   },
 });
 </script>

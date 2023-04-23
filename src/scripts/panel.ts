@@ -1,46 +1,31 @@
 import * as PopUp from "./PopUp";
 export function tab(panel: string): void {
-  const element = document.getElementById(panel);
-  const tabButtonList = element?.querySelectorAll('[role="tab"]');
-  const tabArrayList = [].slice.call(tabButtonList);
+  const wrap = document.getElementById(panel);
+  const tabs = wrap?.querySelectorAll('[role="tab"]');
 
-  // Initialize tabFocus
-  const activeTab = element?.querySelector(
-    '[aria-selected="true"]'
-  ) as HTMLButtonElement;
-  const indexNum = (tabArrayList as HTMLButtonElement[]).indexOf(activeTab);
-  let tabFocus = indexNum || 0;
+  const click = (event: Event): void => {
+    const section = event.currentTarget as HTMLButtonElement;
+    const targetPanel = section.getAttribute("aria-controls");
+    const activeTab = wrap?.querySelector('[aria-selected="true"]');
+    const activeSection = wrap?.querySelector('[aria-hidden="false"]');
 
-  // Toggle function
-  const toggleTab = (event: Event): void => {
-    const eventTarget = event.currentTarget as HTMLButtonElement;
-    const targetPanel = eventTarget.getAttribute("aria-controls");
-    const activeTab = element?.querySelector('[aria-selected="true"]');
-    const activeContent = element?.querySelector('[aria-hidden="false"]');
+    activeTab!.setAttribute("aria-selected", "false");
+    activeTab!.setAttribute("tabindex", "-1");
+    section!.setAttribute("aria-selected", "true");
+    section!.setAttribute("tabindex", "0");
 
-    // Toggle tab's aria-selected
-    activeTab?.setAttribute("aria-selected", "false");
-    activeTab?.setAttribute("tabindex", "-1");
-    eventTarget?.setAttribute("aria-selected", "true");
-    eventTarget?.setAttribute("tabindex", "0");
-    const indexNum = (tabArrayList as HTMLButtonElement[]).indexOf(eventTarget);
-    tabFocus = indexNum;
-
-    // Toggle content's aria-hidden
-    activeContent?.setAttribute("aria-hidden", "true");
-    element
-      ?.querySelector(`#${targetPanel || "not-supplied"}`)
+    activeSection!.setAttribute("aria-hidden", "true");
+    wrap
+      ?.querySelector(`#${targetPanel || "null"}`)
       ?.setAttribute("aria-hidden", "false");
-    event.preventDefault();
   };
 
-  // Tab click EventListener
-  tabButtonList?.forEach((item) => {
-    item.addEventListener("click", toggleTab);
+  tabs!.forEach((t) => {
+    t.addEventListener("click", click);
   });
 }
 
-export function showSection(i: any, source:any): void {
+export function showSection(i: Number, source: String): void {
   PopUp.closePopUp(source);
   let elements = [1, 2, 3];
   const navList = document.getElementById("navList");

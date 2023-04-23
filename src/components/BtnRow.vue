@@ -1,14 +1,19 @@
 <template>
-  <div class="wrap__buttons">
+  <div class="wrap-btns">
     <button
+      v-if="btn1 !== 'null'"
       class="btn btn__neutral"
       @click.prevent="btn1Click('abc')"
-      v-if="btn1 !== 'null'"
     >
       <i class="fa fa-close"></i> {{ btn1 }}
     </button>
 
-    <button class="btn" :disabled="disabled" @click.prevent="btn2Click('abc')">
+    <button
+      v-if="btn2 !== 'null'"
+      class="btn"
+      :disabled="disabled"
+      @click.prevent="btn2Click('abc')"
+    >
       {{ btn2 }}
     </button>
   </div>
@@ -16,6 +21,7 @@
 
 <script lang="ts">
 export default {
+  name: 'BtnRow',
   props: {
     btn1: {
       type: String,

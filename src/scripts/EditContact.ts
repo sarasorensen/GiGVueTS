@@ -5,9 +5,8 @@ export function toBeDeleted(contact:any){
  return deleteMe = contact;
 }
 
-var editMe = ""
 export function toBeEdited(contact:any){
- return editMe = contact;
+ return  contact;
 }
 
 export function deleteContact() {

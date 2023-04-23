@@ -1,12 +1,12 @@
 <template>
   <section>
-    <h3>{{ title }}</h3>
+    <h2>{{ title }}</h2>
     <p class="desc">{{ info }}</p>
     <table>
       <tr>
         <th v-for="(col, i) in columns" :key="i">{{ col }}</th>
       </tr>
-
+      
       <tr
         @click="rowClick('abc'), action(object)"
         v-for="(object, k) in data"

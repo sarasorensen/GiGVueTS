@@ -3,13 +3,13 @@
     <h1>Address Book</h1>
 
     <div id="panel">
-      <ul class="nav">
+      <ul class="nav" role="tablist">
         <li
           @click="tab"
           role="tab"
           aria-controls="panel1"
           aria-selected="true"
-          tabindex="1"
+          tabindex="0"
         >
           All contacts
         </li>
@@ -32,13 +32,15 @@
         aria-hidden="false"
         tabindex="0"
       >
-      <div class="space"></div>
+        <div class="space"></div>
         <table-item
+          v-if="contacts.length !== 0"
           :title="'All contacts'"
           :columns="['Name', 'Last name', 'E-mail', 'Country']"
           :data="contacts"
           :hover="false"
         />
+        <zero-msg v-else />
       </div>
       <div
         id="panel2"
@@ -63,6 +65,7 @@
 
         <section id="toggle2">
           <table-item
+            v-if="contacts.length !== 0"
             :title="'Delete contact'"
             :info="'Click to delete the desired contact.'"
             :columns="['Name', 'Last name', 'E-mail', 'Country']"
@@ -71,6 +74,8 @@
             @action="toBeDeleted"
             :hover="true"
           />
+
+          <zero-msg v-else />
 
           <pop-up
             @actionPopUp="confirmDelete()"
@@ -83,6 +88,7 @@
         </section>
         <section id="toggle3">
           <table-item
+            v-if="contacts.length !== 0"
             :title="'Edit contact'"
             :info="'Click to edit the desired contact.'"
             :columns="['Name', 'Last name', 'E-mail', 'Country']"
@@ -92,8 +98,9 @@
             :hover="true"
           />
 
-          <pop-up
+          <zero-msg v-else />
 
+          <pop-up
             @closePopUp="closePopUp('edit')"
             :title="'Edit'"
             :name="modifyTitle"
@@ -108,6 +115,7 @@
 </template>
 
 <script lang="ts">
+import store from "./store/index";
 import { mapState } from "vuex";
 import { defineComponent } from "vue";
 import * as Panel from "./scripts/panel";
@@ -115,21 +123,26 @@ import * as PopUpTs from "./scripts/PopUp";
 import * as Contact from "./scripts/EditContact";
 
 //components
+import ZeroMsg from "./components/ZeroMsg.vue";
 import PopUp from "./components/PopUp.vue";
 import ContactForm from "./components/ContactForm.vue";
 import TableItem from "./components/TableItem.vue";
 export default defineComponent({
   components: {
-    ContactForm,
+    ZeroMsg,
     PopUp,
+    ContactForm,
     TableItem,
   },
   data() {
     return {
       modifyTitle: "",
-      editContact: {}
+      editContact: {},
     };
   },
+  async beforeCreate() {
+		await store.commit('initialiseStore');
+	},
   computed: {
     ...mapState(["contacts"]),
   },
@@ -160,8 +173,8 @@ export default defineComponent({
     },
   },
   async mounted() {
-  await  this.tab();
-  await  this.showSection(1, "null");
+    await this.tab();
+    await this.showSection(1, "null");
   },
 });
 </script>

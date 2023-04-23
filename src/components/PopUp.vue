@@ -6,9 +6,9 @@
     ></i>
     <div class="popup__content" @click.stop>
       <div id="verify">
-        <h2>{{ title }} {{ name }}</h2>
+        <h3>{{ title }} {{ name }}</h3>
 
-        <p v-if="action == 'delete'" class="desc">
+        <p v-if="action == 'delete'" class="popup__content--desc">
           Do you really want to delete {{ name }}? This cannot be undone.
         </p>
 
@@ -22,22 +22,24 @@
       </div>
 
       <div id="verified">
-        <h2>Success</h2>
-        <div class="wrap__buttons">
-          <button class="btn" @click="closePopUp(action)">Close</button>
-        </div>
+        <h3>Success</h3>
+        <btn-row
+          :btn1="'Close'"
+          :btn1Click="() => closePopUp(action)"
+          :btn2="'null'"
+        />
       </div>
 
       <div class="loader" id="loader"></div>
 
-      <btn-row
-      v-if="action !== 'edit'"
-        id="btns-action"
-        :btn1="'Cancel'"
-        :btn1Click="() => closePopUp(action)"
-        :btn2="btn"
-        :btn2Click="() => actionPopUp()"
-      />
+      <div v-if="action !== 'edit'" id="btns-action">
+        <btn-row
+          :btn1="'Cancel'"
+          :btn1Click="() => closePopUp(action)"
+          :btn2="btn"
+          :btn2Click="() => actionPopUp()"
+        />
+      </div>
 
       <hr />
     </div>
@@ -77,7 +79,7 @@ export default defineComponent({
     },
     formInput: {
       type: Object,
-    }
+    },
   },
   methods: {
     closePopUp(source: any) {

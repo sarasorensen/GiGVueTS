@@ -1,13 +1,13 @@
 import { createStore } from "vuex";
 
-export default createStore({
+const store = createStore({
   state: {
     toBeDeleted: {},
     contacts: [
       {
         name: "Sara",
         lastName: "Sørensen",
-        email: "sarasorensen97@hotmail.com",
+        email: "sara@hotmail.com",
         country: "norway",
         id: 1,
       },
@@ -25,12 +25,18 @@ export default createStore({
     editInPrgs: false,
     editSuccess: false,
   },
-  getters: {},
-  mutations: {},
+  mutations: {
+    initialiseStore(state) {
+      if (localStorage.getItem("contacts")) {
+        state.contacts = JSON.parse(localStorage.contacts);
+      }
+    },
+  },
   actions: {
     addContact(i, formInfo) {
       this.state.addingInPrgs = true;
       this.state.contacts.push(formInfo);
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
       this.state.addingInPrgs = false;
       this.state.addSuccess = true;
     },
@@ -39,7 +45,9 @@ export default createStore({
       let removeIndex = this.state.contacts
         .map((item) => item.id)
         .indexOf(contact.id);
+
       this.state.contacts.splice(removeIndex, 1);
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
       this.state.deleteInPrgs = false;
     },
     editContact(i, contact) {
@@ -52,5 +60,6 @@ export default createStore({
       this.state.editSuccess = true;
     },
   },
-  modules: {},
 });
+
+export default store;
